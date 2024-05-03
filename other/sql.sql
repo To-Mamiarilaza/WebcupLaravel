@@ -14,7 +14,7 @@ insert into utilisateur(nom,mdp,privilege) values('admin','admin','admin');
 
 create table categorie(
     id int primary key auto_increment,
-    nom varchar(255),
+    nom varchar(255)
 
 );
 
