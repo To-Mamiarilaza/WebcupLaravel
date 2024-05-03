@@ -24,8 +24,18 @@
         <div class="clearfix"></div>
 
         <div class="card">
-            @include('categories.table')
+            <div class="card-body p-0">
+                @include('categories.table')
+
+                <div class="card-footer clearfix">
+                    <div class="float-right">
+                        
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
 @endsection
+

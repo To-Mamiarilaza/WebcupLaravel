@@ -3,10 +3,8 @@
 namespace App\Repositories;
 
 use Illuminate\Container\Container as Application;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+
 
 abstract class BaseRepository
 {
@@ -16,22 +14,34 @@ abstract class BaseRepository
     protected $model;
 
     /**
+     * @var Application
+     */
+    protected $app;
+
+    /**
+     * @param Application $app
+     *
      * @throws \Exception
      */
-    public function __construct()
+    public function __construct(Application $app)
     {
+        $this->app = $app;
         $this->makeModel();
     }
 
     /**
      * Get searchable fields array
+     *
+     * @return array
      */
-    abstract public function getFieldsSearchable(): array;
+    abstract public function getFieldsSearchable();
 
     /**
      * Configure the Model
+     *
+     * @return string
      */
-    abstract public function model(): string;
+    abstract public function model();
 
     /**
      * Make Model instance
@@ -42,7 +52,7 @@ abstract class BaseRepository
      */
     public function makeModel()
     {
-        $model = app($this->model());
+        $model = $this->app->make($this->model());
 
         if (!$model instanceof Model) {
             throw new \Exception("Class {$this->model()} must be an instance of Illuminate\\Database\\Eloquent\\Model");
@@ -53,8 +63,12 @@ abstract class BaseRepository
 
     /**
      * Paginate records for scaffold.
+     *
+     * @param int $perPage
+     * @param array $columns
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator
      */
-    public function paginate(int $perPage, array $columns = ['*']): LengthAwarePaginator
+    public function paginate($perPage, $columns = ['*'])
     {
         $query = $this->allQuery();
 
@@ -63,8 +77,13 @@ abstract class BaseRepository
 
     /**
      * Build a query for retrieving all records.
+     *
+     * @param array $search
+     * @param int|null $skip
+     * @param int|null $limit
+     * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function allQuery(array $search = [], int $skip = null, int $limit = null): Builder
+    public function allQuery($search = [], $skip = null, $limit = null)
     {
         $query = $this->model->newQuery();
 
@@ -89,8 +108,15 @@ abstract class BaseRepository
 
     /**
      * Retrieve all records with given filter criteria
+     *
+     * @param array $search
+     * @param int|null $skip
+     * @param int|null $limit
+     * @param array $columns
+     *
+     * @return \Illuminate\Contracts\Pagination\LengthAwarePaginator|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function all(array $search = [], int $skip = null, int $limit = null, array $columns = ['*']): Collection
+    public function all($search = [], $skip = null, $limit = null, $columns = ['*'])
     {
         $query = $this->allQuery($search, $skip, $limit);
 
@@ -99,8 +125,12 @@ abstract class BaseRepository
 
     /**
      * Create model record
+     *
+     * @param array $input
+     *
+     * @return Model
      */
-    public function create(array $input): Model
+    public function create($input)
     {
         $model = $this->model->newInstance($input);
 
@@ -112,9 +142,12 @@ abstract class BaseRepository
     /**
      * Find model record for given id
      *
+     * @param int $id
+     * @param array $columns
+     *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model|null
      */
-    public function find(int $id, array $columns = ['*'])
+    public function find($id, $columns = ['*'])
     {
         $query = $this->model->newQuery();
 
@@ -124,9 +157,12 @@ abstract class BaseRepository
     /**
      * Update model record for given id
      *
+     * @param array $input
+     * @param int $id
+     *
      * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|Model
      */
-    public function update(array $input, int $id)
+    public function update($input, $id)
     {
         $query = $this->model->newQuery();
 
@@ -140,11 +176,13 @@ abstract class BaseRepository
     }
 
     /**
+     * @param int $id
+     *
      * @throws \Exception
      *
      * @return bool|mixed|null
      */
-    public function delete(int $id)
+    public function delete($id)
     {
         $query = $this->model->newQuery();
 

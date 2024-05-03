@@ -1,6 +1,4 @@
-<?php
-
-namespace Tests;
+<?php namespace Tests;
 
 trait ApiTestTrait
 {

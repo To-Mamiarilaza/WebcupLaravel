@@ -4,10 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreateCategoriesRequest;
 use App\Http\Requests\UpdateCategoriesRequest;
-use App\Http\Controllers\AppBaseController;
 use App\Repositories\CategoriesRepository;
+use App\Http\Controllers\AppBaseController;
 use Illuminate\Http\Request;
 use Flash;
+use Response;
 
 class CategoriesController extends AppBaseController
 {
@@ -21,10 +22,14 @@ class CategoriesController extends AppBaseController
 
     /**
      * Display a listing of the Categories.
+     *
+     * @param Request $request
+     *
+     * @return Response
      */
     public function index(Request $request)
     {
-        $categories = $this->categoriesRepository->paginate(10);
+        $categories = $this->categoriesRepository->all();
 
         return view('categories.index')
             ->with('categories', $categories);
@@ -32,6 +37,8 @@ class CategoriesController extends AppBaseController
 
     /**
      * Show the form for creating a new Categories.
+     *
+     * @return Response
      */
     public function create()
     {
@@ -40,6 +47,10 @@ class CategoriesController extends AppBaseController
 
     /**
      * Store a newly created Categories in storage.
+     *
+     * @param CreateCategoriesRequest $request
+     *
+     * @return Response
      */
     public function store(CreateCategoriesRequest $request)
     {
@@ -54,6 +65,10 @@ class CategoriesController extends AppBaseController
 
     /**
      * Display the specified Categories.
+     *
+     * @param int $id
+     *
+     * @return Response
      */
     public function show($id)
     {
@@ -70,6 +85,10 @@ class CategoriesController extends AppBaseController
 
     /**
      * Show the form for editing the specified Categories.
+     *
+     * @param int $id
+     *
+     * @return Response
      */
     public function edit($id)
     {
@@ -86,6 +105,11 @@ class CategoriesController extends AppBaseController
 
     /**
      * Update the specified Categories in storage.
+     *
+     * @param int $id
+     * @param UpdateCategoriesRequest $request
+     *
+     * @return Response
      */
     public function update($id, UpdateCategoriesRequest $request)
     {
@@ -107,7 +131,11 @@ class CategoriesController extends AppBaseController
     /**
      * Remove the specified Categories from storage.
      *
+     * @param int $id
+     *
      * @throws \Exception
+     *
+     * @return Response
      */
     public function destroy($id)
     {

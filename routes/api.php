@@ -19,5 +19,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 
-Route::resource('categories', App\Http\Controllers\API\CategoriesAPIController::class)
-    ->except(['create', 'edit']);
+Route::group(['prefix' => 'cAT'], function () {
+    Route::resource('categories', App\Http\Controllers\API\Cat\CategoriesAPIController::class);
+});
