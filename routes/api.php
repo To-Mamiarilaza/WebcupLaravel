@@ -2,6 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\CategorieApiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,7 +20,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('/categories', [CategorieApiController::class, 'index']);
 
-Route::group(['prefix' => 'cAT'], function () {
-    Route::resource('categories', App\Http\Controllers\API\Cat\CategoriesAPIController::class);
-});
