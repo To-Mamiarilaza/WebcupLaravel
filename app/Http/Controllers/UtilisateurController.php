@@ -20,6 +20,6 @@ class UtilisateurController extends Controller
             $request->session()->put('user_id', $user->id);
             return redirect()->intended('/categories');
         }
-        return back()->withErrors(['message' => 'Nom d\'utilisateur ou mot de passe incorrect']);
+        return back()->withErrors(['message' => 'Nom d\'utilisateur ou mot de passe incorrect'])->withInput();
     }
 }
